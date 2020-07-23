@@ -1,5 +1,5 @@
 var async = require('async');
-const validator = require('express-validator');
+const { check, body, validationResult } = require('express-validator');
 var Book = require('../models/book');
 var Genre = require('../models/genre');
 
@@ -51,16 +51,16 @@ exports.genre_create_get = function(req, res, next) {
 exports.genre_create_post =  [
    
     // Validate that the name field is not empty.
-    validator.body('name', 'Genre name required').trim().isLength({ min: 1 }),
+    body('name', 'Genre name required').trim().isLength({ min: 1 }),
     
     // Sanitize (escape) the name field.
-    validator.sanitizeBody('name').escape(),
+    check('name').escape(),
   
     // Process request after validation and sanitization.
     (req, res, next) => {
   
       // Extract the validation errors from a request.
-      const errors = validator.validationResult(req);
+      const errors = validationResult(req);
   
       // Create a genre object with escaped and trimmed data.
       var genre = new Genre(
